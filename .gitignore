@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Secret environment files
+.env
+.env.*
+!.env.example
+
+# Frontend build
+dist/
+
+# Logs
+*.log
+
+# Local HTTPS certificates
+backend/certs/
+
+# Editor and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

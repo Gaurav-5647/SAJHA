@@ -1,0 +1,35 @@
+{
+  "name": "sajha-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "admin": "node src/admin.js",
+    "test": "node --test test/*.test.js",
+    "dev": "node --watch src/server.js",
+    "build:frontend": "npm --prefix ../frontend run build",
+    "configure": "node scripts/configure.mjs",
+    "https:cert": "node scripts/cert.mjs",
+    "start:https": "node src/server.js --https",
+    "cashfree:check": "node scripts/cashfree-check.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "ffprobe-static": "^3.1.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "multer": "^2.4.0",
+    "nodemailer": "^6.10.0",
+    "selfsigned": "^2.4.1"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^10.1.4",
+    "supertest": "^7.0.0"
+  }
+}

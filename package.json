@@ -1,0 +1,19 @@
+{
+  "name": "sajha",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SAJHA \u2014 Cooperative Gig Services Platform",
+  "scripts": {
+    "postinstall": "node scripts/setup.mjs",
+    "prestart": "node scripts/setup.mjs --check",
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "build": "npm --prefix frontend run build",
+    "admin": "npm --prefix backend run admin --",
+    "test": "npm --prefix backend test",
+    "cashfree:check": "npm --prefix backend run cashfree:check"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

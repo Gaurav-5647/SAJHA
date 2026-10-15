@@ -1,0 +1,3 @@
+export const flow=['Pending','Accepted','On The Way','Reached','In Progress','Completed'];
+export function canTransition(role,current,next){if(role==='customer')return next==='Cancelled'&&['Pending','Accepted'].includes(current);if(role==='worker')return(['Pending','Accepted','On The Way','Reached','In Progress'].includes(current)&&next==='Cancelled')||flow.indexOf(next)===flow.indexOf(current)+1&&current!=='Completed'&&flow.includes(current);return false;}
+export function eligible(w){return w.isApproved===true&&w.approvalStatus==='approved'&&w.availability==='available'&&w.user?.role==='worker'&&w.user?.accountStatus==='active'&&!!(w.pin&&w.city&&w.district&&w.state&&w.locality&&w.bio);}

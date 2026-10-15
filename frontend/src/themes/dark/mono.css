@@ -1,0 +1,73 @@
+/* ==========================================================
+   SAJHA — Charcoal Mono (dark theme, final layer)
+   Pure charcoal black + grey. No colour accents, no 3D scene.
+   Loaded AFTER glass.css (dark only).
+   ========================================================== */
+:root{
+  --ink:#ededee;--ink-2:#c7c7cb;--muted:#8d8d94;--border:rgba(255,255,255,.09);
+  --navy:#17171a;--navy-2:#1d1d21;--deep:#0a0a0b;--ivory:#0b0b0c;--paper:#141416;
+  --teal:#d6d6da;--emerald:#c4c4c9;--emerald-2:#e6e6e9;
+  --gold:#a9a9b0;--gold-2:#c9c9ce;--gold-3:#e2e2e5;
+  --glass:rgba(255,255,255,.04);--glass-b:rgba(255,255,255,.06);
+  --g-fill:linear-gradient(180deg,#1a1a1d,#151517);
+  --g-fill-2:linear-gradient(180deg,#212125,#1a1a1d);
+  --g-line:rgba(255,255,255,.09);
+  --g-hi:inset 0 1px 0 rgba(255,255,255,.05);
+  --g-shadow:0 12px 32px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.4);
+  --g-shadow-h:0 18px 44px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.16);
+  --sh-1:0 1px 2px rgba(0,0,0,.4);--sh-2:0 12px 32px rgba(0,0,0,.45);--sh-3:0 30px 70px rgba(0,0,0,.6);
+  --blur:blur(14px) saturate(1.1);
+  color-scheme:dark;
+}
+html{background:#0b0b0c}
+body{background:radial-gradient(1000px 520px at 50% -8%,rgba(255,255,255,.055),transparent 62%),linear-gradient(180deg,#0e0e10,#09090a);background-attachment:fixed;color:var(--ink)}
+::selection{background:#d6d6da;color:#0b0b0c}
+::-webkit-scrollbar-thumb{background:#3a3a40;border-color:#0b0b0c}::-webkit-scrollbar-thumb:hover{background:#5a5a62}
+
+/* no 3D scene, orbs, grid, glow objects */
+.scene,.orb,.floor,.stars,.cube,.sph,.ringx,.blob,.visual,.orbit{display:none!important}
+.scroll-progress{background:linear-gradient(90deg,#6c6c74,#e6e6e9)!important;animation:none!important}
+
+/* surfaces */
+.card,.stat,.category-card,.worker-card,.notice,.community-banner,.table-wrap,.empty,.review,.notification,.ticket-row,.booking,.modal,.dropdown,.panel{
+  background:var(--g-fill)!important;border:1px solid var(--g-line)!important;box-shadow:var(--g-shadow)!important}
+.header,.sidebar{background:rgba(14,14,16,.86)!important;border-color:rgba(255,255,255,.08)!important}
+.auth-story{background:linear-gradient(160deg,#18181b 0%,#0e0e10 60%,#0a0a0b 100%)!important}
+.auth-main{background:#0d0d0f!important}
+.auth-box{background:var(--g-fill)!important;border:1px solid var(--g-line)!important;box-shadow:var(--g-shadow)!important}
+input,select,textarea,.password{background:#111113!important;border-color:rgba(255,255,255,.12)!important;color:var(--ink)!important}
+/* inputs that live inside a bordered wrapper stay flat */
+.admin-global-search input,.search-box input,.password input,.inline-input input,.assistant input{background:transparent!important;border:0!important;box-shadow:none!important}
+input:focus,select:focus,textarea:focus,.password:focus-within{border-color:#8d8d94!important;box-shadow:0 0 0 3px rgba(255,255,255,.08)!important}
+.segmented{background:#101012!important;border:1px solid rgba(255,255,255,.08)!important}
+.segmented .selected{background:#2a2a2f!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important}
+
+/* primary actions: silver on charcoal */
+.btn:not(.secondary):not(.danger),.search-box .btn,.auth-box form>.btn,.assistant form button{
+  background:linear-gradient(180deg,#f1f1f3,#c9c9ce)!important;color:#0b0b0c!important;border:1px solid rgba(255,255,255,.4)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.7)!important;text-shadow:none!important}
+.btn:not(.secondary):not(.danger):hover,.auth-box form>.btn:hover,.search-box .btn:hover{filter:brightness(1.06);box-shadow:0 12px 28px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.8)!important}
+.btn:not(.secondary) svg,.auth-box form>.btn svg{color:#0b0b0c}
+.btn.secondary{background:rgba(255,255,255,.05)!important;color:var(--ink)!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:none!important}
+.btn.secondary:hover{background:rgba(255,255,255,.1)!important}
+.assistant-fab,.check-circle,.category-card:hover .cat-arrow{background:linear-gradient(180deg,#f1f1f3,#c9c9ce)!important;color:#0b0b0c!important;box-shadow:0 12px 30px rgba(0,0,0,.55)!important}
+.assistant-fab svg,.check-circle svg{color:#0b0b0c}
+.logo .brand-dot,.brand-lockup .brand-dot{background:#c9c9ce!important;color:#c9c9ce!important;box-shadow:none!important}
+.brand-lockup .brand-icon{filter:none;background:none}
+.nav-inner>nav .active:after,.strength i.filled,.bar-row i{background:#d6d6da!important;box-shadow:none!important}
+.dot{background:#d6d6da!important;box-shadow:none!important;animation:none!important}
+.eyebrow,.tag,.auth-story .eyebrow{color:#a9a9b0!important}
+a:hover{color:inherit}
+.toast{background:#1a1a1d!important;border:1px solid rgba(255,255,255,.14)!important;color:var(--ink)!important}
+.avatar,.worker-avatar{background:linear-gradient(180deg,#e6e6e9,#a9a9b0)!important;color:#0b0b0c!important}
+
+/* category tiles & floating icons: no pastel colours */
+.cat-icon,.color-0,.color-1,.color-2,.color-3,.color-4{background:linear-gradient(180deg,#f1f1f3,#c9c9ce)!important;color:#2a2a2f!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 8px 20px rgba(0,0,0,.4)!important}
+.float-icon{background:linear-gradient(180deg,#26262a,#1a1a1d)!important;color:#e6e6e9!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 14px 34px rgba(0,0,0,.5)!important}
+.float-icon svg{color:#e6e6e9!important}
+.float-card{background:linear-gradient(180deg,#1f1f23,#171719)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 18px 44px rgba(0,0,0,.55)!important}
+.visual-center,.hero-visual .sph{background:radial-gradient(circle at 30% 25%,#3a3a40,#16161a 70%)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 24px 60px rgba(0,0,0,.55)!important}
+.hero,.hero-bg{background:linear-gradient(160deg,#1a1a1d,#0f0f11 70%)!important;border:1px solid rgba(255,255,255,.09)!important}
+.hero-bg{border:0!important}
+/* analytics: charts / KPI icons / legends in greyscale */
+.viz svg,.viz-modal svg,.viz-kpi-icon,.viz-legend i,.viz-hbar-track i,[class^="viz-"] i,[class*=" viz-"] i{filter:grayscale(1)}
