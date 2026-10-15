@@ -284,12 +284,17 @@ export async function markPaid(p, cfPaymentId) {
     { new: true }
   );
 
-  if (!u) return p;
+  if (!u) {
+    await completePaidBooking(p.booking);
+    return await Payment.findById(p._id);
+  }
 
   await Booking.updateOne(
     { _id: u.booking },
     { paymentStatus: 'Secured' }
   );
+
+  await completePaidBooking(u.booking);
 
   const w = await Worker.findById(u.worker);
 
@@ -312,11 +317,87 @@ export async function markPaid(p, cfPaymentId) {
     )
   ]);
 
-  return u;
+  return await Payment.findById(u._id);
+}
+
+// Only verified customer payments can complete work. The transaction keeps
+// the booking, earnings counter and complaint clocks consistent on retries.
+export async function completePaidBooking(bookingId) {
+  const session = await Booking.startSession();
+  let completed = null;
+  try {
+    await session.withTransaction(async () => {
+      completed = null;
+      const p = await Payment.findOne({
+        booking: bookingId,
+        status: { $in: ['Held', 'Disputed'] },
+        paidAt: { $ne: null }
+      }).session(session);
+      if (!p) return;
+      const b = await Booking.findOne({
+        _id: bookingId,
+        status: 'Awaiting Payment'
+      }).session(session);
+      if (!b || toPaise(b.amount) !== p.total ||
+          String(b.customer) !== String(p.customer) ||
+          String(b.worker) !== String(p.worker)) return;
+      const now = new Date();
+      completed = await Booking.findOneAndUpdate(
+        { _id: b._id, status: 'Awaiting Payment' },
+        {
+          $set: { status: 'Completed', paymentStatus: 'Secured' },
+          $push: { timeline: { status: 'Completed', at: now } },
+          $unset: { location: '' }
+        },
+        { new: true, session }
+      );
+      if (!completed) return;
+      await Worker.updateOne(
+        { _id: b.worker }, { $inc: { completedJobs: 1 } }, { session }
+      );
+      await Transaction.updateOne(
+        { booking: b._id },
+        { $setOnInsert: {
+          booking: b._id, worker: b.worker, customer: b.customer,
+          amount: toRupees(computeSplit(p.total).visit + computeSplit(p.total).work),
+          method: 'Cashfree', status: 'Pending'
+        } },
+        { upsert: true, session }
+      );
+      await Payment.updateOne(
+        { _id: p._id, completedAt: { $exists: false } },
+        { $set: {
+          completedAt: now,
+          complaintDeadline: new Date(now.getTime() + COMPLAINT_MIN * MIN),
+          settleBy: new Date(now.getTime() + SETTLE_MIN * MIN)
+        } },
+        { session }
+      );
+      const w = await Worker.findById(b.worker).session(session);
+      const code = String(b._id).slice(-6).toUpperCase();
+      await Notification.create([
+        { user: b.customer, text: `Booking ${code}: payment confirmed and service completed. You have 15 minutes to report a problem.` },
+        ...(w ? [{ user: w.user, text: `Booking ${code}: customer payment confirmed. Job completed; admin payout follows the complaint review.` }] : [])
+      ], { session, ordered: true });
+    });
+    return completed;
+  } catch (error) {
+    console.error('Paid booking completion failed:', error.message);
+    throw error;
+  } finally {
+    await session.endSession();
+  }
 }
 
 async function syncGatewayPayment(p) {
-  if (!p || !['Created', 'Failed'].includes(p.status)) return p;
+  if (!p) return p;
+  if (!['Created', 'Failed'].includes(p.status)) {
+    if (['Held', 'Disputed'].includes(p.status)) {
+      await completePaidBooking(p.booking);
+      return await Payment.findById(p._id);
+    }
+    return p;
+  }
 
   const order = await cashfree.request(
     'GET',
@@ -841,11 +922,8 @@ export function paymentRoutes(
     wrap(async (req, res) => {
       const b = await ownBooking(req, req.body.booking);
 
-      if (
-        !['Accepted', 'On The Way', 'Reached', 'In Progress']
-          .includes(b.status)
-      ) {
-        fail('You can pay once the worker has accepted the booking');
+      if (b.status !== 'Awaiting Payment') {
+        fail('Payment becomes available when the worker requests payment after finishing the work');
       }
 
       const total = toPaise(b.amount);
@@ -878,10 +956,14 @@ export function paymentRoutes(
         }
 
         if (p.status === 'Created') {
-          fail(
-            'Payment confirmation is pending. Check payment status before trying again.',
-            409
-          );
+          const existing = await cashfree.request('GET', `/orders/${p.cfOrderId}`);
+          if (existing.order_status === 'ACTIVE' && existing.payment_session_id) {
+            return res.json({
+              orderId: p.cfOrderId, paymentSessionId: existing.payment_session_id,
+              mode: cashfree.mode(), amount: toRupees(p.total)
+            });
+          }
+          fail('Payment confirmation is pending. Check payment status before trying again.', 409);
         }
       }
 

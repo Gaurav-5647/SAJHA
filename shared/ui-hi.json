@@ -674,5 +674,8 @@
   "Services Report": "सेवा रिपोर्ट",
   "Locations Report": "स्थान रिपोर्ट",
   "Skill Requests Report": "कौशल अनुरोध रिपोर्ट",
-  "Audit Logs Report": "ऑडिट लॉग रिपोर्ट"
+  "Audit Logs Report": "ऑडिट लॉग रिपोर्ट",
+  "Awaiting Payment": "भुगतान की प्रतीक्षा",
+  "Work Done / Request Payment": "काम पूरा / भुगतान मांगें",
+  "Payment requested. Booking completes after verified customer payment.": "भुगतान मांगा गया। ग्राहक के भुगतान की पुष्टि पर बुकिंग पूरी होगी।"
 }
