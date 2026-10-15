@@ -10,7 +10,7 @@ export const User=make('User',
 // ===== WORKER PROFILE & MATCHING =====
 export const Worker=make('WorkerProfile',
 {user:{...ref('User'),unique:true},category:String,skill:String,additionalSkills:[String],experience:Number,bio:String,pin:String,city:String,district:String,state:String,locality:String,serviceArea:[String],price:{type:Number,default:0},approvalStatus:{type:String,default:'pending'},isApproved:{type:Boolean,default:false},approvedBy:ref('User'),approvedAt:Date,reason:String,availability:{type:String,default:'offline'},location:{lat:Number,lng:Number,accuracy:Number,updatedAt:Date},verification:{type:Map,of:String,default:{}},rating:{type:Number,default:0},reviewCount:{type:Number,default:0},completedJobs:{type:Number,default:0}},
-[[{approvalStatus:1,isApproved:1}],[{district:1,skill:1,availability:1}],[{rating:-1}],[{user:1}],[{skill:1,additionalSkills:1,availability:1},{background:true}]]); // Match by district+skill+availability, approval workflow, rating sort
+[[{approvalStatus:1,isApproved:1}],[{district:1,skill:1,availability:1}],[{rating:-1}],[{skill:1,additionalSkills:1,availability:1},{background:true}]]); // Match by district+skill+availability, approval workflow, rating sort
 
 // ===== BOOKING & TRANSACTIONS =====
 export const Customer=make('CustomerProfile',{user:{...ref('User'),unique:true},favorites:[ref('WorkerProfile')]});
